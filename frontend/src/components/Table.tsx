@@ -5,13 +5,31 @@ import { BiEdit, BiTrashAlt } from 'react-icons/bi';
 
 
 export function Table() {
-    const { rows, currentPage, totalPages, allEmployees, fetchData } = useStore();
+    const { rows, currentPage, totalPages, allEmployees, fetchData, setCurrentPage, updateRow } = useStore();
+
+    // updating status onclick
+    function statusUpdateHandler(id: string) {
+        updateRow(id, rows)
+            .then(() => {
+                fetchData(currentPage, 20)
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    // Page changing
+    function changeHandler(num: number) {
+        setCurrentPage(num)
+    }
+
     useEffect(() => {
-        fetchData(currentPage, 20);
+        fetchData(currentPage, 20)
     }, [currentPage, fetchData]);
+
     return (
         <div>
-            <table className='min-w-full table-auto'>
+            <table className='table-auto min-w-full'>
                 {/* table head */}
                 <thead>
                     <tr className='bg-slate-800'>
@@ -37,7 +55,7 @@ export function Table() {
                 </thead>
 
                 {/* table body */}
-                <tbody className='bg-slate-100'>
+                <tbody className='bg-slate-100 divide-y divide-slate-300'>
                     {
                         rows.map(({ id, avatar, name, email, salary, birthday, status }) => (
                             <tr key={id} className='text-center'>
@@ -51,14 +69,14 @@ export function Table() {
                                 <td className='px-16 py-2'>
                                     <button
                                         className={`${status === "Active" ? 'bg-green-500' : 'bg-red-500'} text-white rounded-full px-3`}
-                                    // onClick={toggleStatus}
+                                        onClick={() => statusUpdateHandler(id)}
                                     >
                                         {status}
                                     </button>
                                 </td>
                                 <td className='px-16 py-2 text-gray-500'>
-                                    <button className='mr-3 hover:text-yellow-500'><BiEdit size={25} /></button>
-                                    <button className='hover:text-red-500'><BiTrashAlt size={25} /></button>
+                                    <button className='mr-3 hover:text-yellow-500 transition-all'><BiEdit size={25} /></button>
+                                    <button className='hover:text-red-500 transition-all'><BiTrashAlt size={25} /></button>
                                 </td>
                             </tr>
                         ))
@@ -70,6 +88,7 @@ export function Table() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 allEmployees={allEmployees}
+                changeHandler={changeHandler}
             />
         </div>
     )

@@ -17,6 +17,8 @@ type StoreTypes = {
   totalPages: number;
   allEmployees: number;
   fetchData: (page: number, limit: number) => Promise<void>;
+  setCurrentPage: (currentPage: number) => void;
+  updateRow: (id: string, rows: DataTypes[]) => Promise<void>;
 };
 
 export const useStore = create<StoreTypes>((set) => ({
@@ -36,6 +38,31 @@ export const useStore = create<StoreTypes>((set) => ({
         totalPages,
         allEmployees,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  setCurrentPage: (currentPage: number) => set({ currentPage }),
+  updateRow: async (id: string, rows: DataTypes[]) => {
+    try {
+      // finding row to update
+      const rowToUpdate = rows.find((row) => row.id === id);
+      if (!rowToUpdate) {
+        throw new Error(`Could not find employee with id ${id}`);
+      }
+      // making request to the server
+      const updatedRow = await axios.put(
+        `http://localhost:3001/Employees/${id}`,
+        {
+          status: rowToUpdate.status === "Active" ? "InActive" : "Active",
+        }
+      );
+      // check if employee ID matches, a new obj is created with updated 'status', otherwise, the existing employee object is used
+      const updateRows = rows.map((row) =>
+        row.id === id ? { ...row, status: updatedRow.data.status } : row
+      );
+      // update rows array in the store obj with the new array of updated employee data
+      set({ rows: updateRows });
     } catch (error) {
       console.log(error);
     }

@@ -57,7 +57,7 @@ addModel();
 // generate random employees
 // const status = ["Active", "Inactive"];
 // function addEmployees() {
-//   for (let i = 1; i <= 5; i++) {
+//   for (let i = 1; i <= 15; i++) {
 //     const newEmployee = Employees.build({
 //       avatar: chance.avatar(),
 //       name: chance.name(),
@@ -94,6 +94,56 @@ app.get("/Employees", async (req: Request, res: Response) => {
     allEmployees: allEmployees.length,
   };
   res.json(data);
+});
+
+// POST
+app.post("/Employees", async (req: Request, res: Response) => {
+  const { avatar, name, email, birthday, salary, status } = req.body;
+  const newEmployee = await Employees.create({
+    avatar,
+    name,
+    email,
+    birthday,
+    salary,
+    status,
+  });
+  res.json(newEmployee);
+  console.log("New employee added successfully");
+});
+
+// PUT
+app.put("/Employees/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const [numAffectedRows] = await Employees.update(
+      { status: status },
+      { where: { id } }
+    );
+
+    if (numAffectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: `Employee with ID ${id} not found` });
+    }
+
+    res.json({ message: `Employee with ID ${id} updated successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// DELETE
+app.delete("/Employees/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const deleteEmployee = await Employees.destroy({ where: { id } });
+
+  if (deleteEmployee > 0) {
+    res.json({ messsage: "Employee deleted" });
+  } else {
+    res.status(404).json({ error: "Employee not found" });
+  }
 });
 
 // listening a server
