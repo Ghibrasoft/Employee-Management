@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const chance = new Chance();
 
-const LOCALHOST_VITE_URL = "http://localhost:5174";
+const LOCALHOST_VITE_URL = "http://localhost:5173";
 const app: Express = express();
 app.use(express.json());
 app.use(cors({ origin: LOCALHOST_VITE_URL }));

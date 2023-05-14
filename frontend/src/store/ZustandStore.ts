@@ -19,6 +19,8 @@ type StoreTypes = {
   fetchData: (page: number, limit: number) => Promise<void>;
   setCurrentPage: (currentPage: number) => void;
   updateRow: (id: string, rows: DataTypes[]) => Promise<void>;
+  searchEmployee: string;
+  setSearchEmployee: (searchEmployee: string) => void;
 };
 
 export const useStore = create<StoreTypes>((set) => ({
@@ -67,4 +69,6 @@ export const useStore = create<StoreTypes>((set) => ({
       console.log(error);
     }
   },
+  searchEmployee: "",
+  setSearchEmployee: (searchEmployee) => set({ searchEmployee }),
 }));

@@ -5,7 +5,7 @@ import { BiEdit, BiTrashAlt } from 'react-icons/bi';
 
 
 export function Table() {
-    const { rows, currentPage, totalPages, allEmployees, fetchData, setCurrentPage, updateRow } = useStore();
+    const { rows, currentPage, totalPages, allEmployees, searchEmployee, fetchData, setCurrentPage, updateRow } = useStore();
 
     // updating status onclick
     function statusUpdateHandler(id: string) {
@@ -57,29 +57,35 @@ export function Table() {
                 {/* table body */}
                 <tbody className='bg-slate-100 divide-y divide-slate-300'>
                     {
-                        rows.map(({ id, avatar, name, email, salary, birthday, status }) => (
-                            <tr key={id} className='text-center'>
-                                <td className='px-16 py-2 flex flex-row items-center'>
-                                    <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
-                                    {name}
-                                </td>
-                                <td className='px-16 py-2'>{email}</td>
-                                <td className='px-16 py-2'>{birthday} </td>
-                                <td className='px-16 py-2'>{salary}</td>
-                                <td className='px-16 py-2'>
-                                    <button
-                                        className={`${status === "Active" ? 'bg-green-500' : 'bg-red-500'} text-white rounded-full px-3`}
-                                        onClick={() => statusUpdateHandler(id)}
-                                    >
-                                        {status}
-                                    </button>
-                                </td>
-                                <td className='px-16 py-2 text-gray-500'>
-                                    <button className='mr-3 hover:text-yellow-500 transition-all'><BiEdit size={25} /></button>
-                                    <button className='hover:text-red-500 transition-all'><BiTrashAlt size={25} /></button>
-                                </td>
-                            </tr>
-                        ))
+                        rows.filter(({ name, email, salary, birthday, status }) =>
+                            name.toLocaleLowerCase().includes(searchEmployee) ||
+                            email.toLocaleLowerCase().includes(searchEmployee) ||
+                            salary.toString().includes(searchEmployee) ||
+                            birthday.toString().toLocaleLowerCase().includes(searchEmployee) ||
+                            status.toLocaleLowerCase() === searchEmployee)
+                            .map(({ id, avatar, name, email, salary, birthday, status }) => (
+                                <tr key={id} className='text-center'>
+                                    <td className='px-16 py-2 flex flex-row items-center'>
+                                        <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
+                                        {name}
+                                    </td>
+                                    <td className='px-16 py-2'>{email}</td>
+                                    <td className='px-16 py-2'>{new Date(birthday).toLocaleDateString('en-US')} </td>
+                                    <td className='px-16 py-2'>{salary}</td>
+                                    <td className='px-16 py-2'>
+                                        <button
+                                            className={`${status === "Active" ? 'bg-green-500' : 'bg-red-500'} text-white rounded-full px-3`}
+                                            onClick={() => statusUpdateHandler(id)}
+                                        >
+                                            {status}
+                                        </button>
+                                    </td>
+                                    <td className='px-16 py-2 text-gray-500'>
+                                        <button className='mr-3 hover:text-yellow-500 transition-all'><BiEdit size={25} /></button>
+                                        <button className='hover:text-red-500 transition-all'><BiTrashAlt size={25} /></button>
+                                    </td>
+                                </tr>
+                            ))
                     }
                 </tbody>
             </table>

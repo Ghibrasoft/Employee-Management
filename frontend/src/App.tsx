@@ -3,6 +3,7 @@ import { Table } from './components/Table';
 import { useState } from 'react';
 import { FiUserPlus } from 'react-icons/fi';
 import { EmployeeForm } from './components/EmployeeForm';
+import { SearchEmployee } from './components/SearchEmployee';
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -22,9 +23,9 @@ function App() {
 
         <div>
           {/* add employee button */}
-          <div>
+          <div className='flex justify-between my-10'>
             <button
-              className="flex items-center px-4 py-2 ml-5 mt-10 rounded-full text-white bg-indigo-500 ring-2 ring-indigo-500 
+              className="flex items-center px-4 py-2 ml-5 rounded-full text-white bg-indigo-500 ring-2 ring-indigo-500 
             active:ring-offset-2 shadow-slate-900 shadow-md
             hover:ring-offset-4 hover:bg-indigo-700 hover:ring-indigo-700 transition ease-in-out"
               onClick={clickHandler}
@@ -32,6 +33,10 @@ function App() {
               <span className="px-1"><FiUserPlus size={20} /></span>
               Add Employee
             </button>
+
+            <div className='mr-5'>
+              <SearchEmployee />
+            </div>
           </div>
 
           {/* form visibility */}
