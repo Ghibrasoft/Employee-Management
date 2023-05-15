@@ -1,15 +1,39 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { TablePagination } from './TablePagination';
 import { useStore } from '../store/ZustandStore';
 import { BiEdit, BiTrashAlt } from 'react-icons/bi';
+import { ConfirmModal } from './ConfirmModal';
 
 
 export function Table() {
-    const { rows, currentPage, totalPages, allEmployees, searchEmployee, fetchData, setCurrentPage, updateRow } = useStore();
+    const [isOpen, setIsOpen] = useState(false);
+    const [employeeId, setEmployeeId] = useState("");
+    const {
+        rows,
+        currentPage,
+        totalPages,
+        allEmployees,
+        searchEmployee,
+        fetchData,
+        setCurrentPage,
+        updateRow,
+        deleteEmployee
+    } = useStore();
 
     // updating status onclick
     function statusUpdateHandler(id: string) {
         updateRow(id, rows)
+            .then(() => {
+                fetchData(currentPage, 20)
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    // delete row 
+    function rowDeleteHandler(id: string) {
+        deleteEmployee(id, rows)
             .then(() => {
                 fetchData(currentPage, 20)
             })
@@ -81,8 +105,19 @@ export function Table() {
                                         </button>
                                     </td>
                                     <td className='px-16 py-2 text-gray-500'>
+                                        {/* edit btn */}
                                         <button className='mr-3 hover:text-yellow-500 transition-all'><BiEdit size={25} /></button>
-                                        <button className='hover:text-red-500 transition-all'><BiTrashAlt size={25} /></button>
+                                        {/* delete btn */}
+                                        <button className='hover:text-red-500 transition-all' onClick={() => { setIsOpen(true); setEmployeeId(id) }}><BiTrashAlt size={25} /></button>
+                                        {
+                                            isOpen &&
+                                            <ConfirmModal
+                                                isOpen={isOpen}
+                                                setIsOpen={setIsOpen}
+                                                employeeId={employeeId}
+                                                rowDeleteHandler={rowDeleteHandler}
+                                            />
+                                        }
                                     </td>
                                 </tr>
                             ))

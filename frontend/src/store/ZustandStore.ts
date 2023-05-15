@@ -16,9 +16,12 @@ type StoreTypes = {
   currentPage: number;
   totalPages: number;
   allEmployees: number;
+
   fetchData: (page: number, limit: number) => Promise<void>;
-  setCurrentPage: (currentPage: number) => void;
   updateRow: (id: string, rows: DataTypes[]) => Promise<void>;
+  deleteEmployee: (id: string, rows: DataTypes[]) => Promise<void>;
+
+  setCurrentPage: (currentPage: number) => void;
   searchEmployee: string;
   setSearchEmployee: (searchEmployee: string) => void;
 };
@@ -44,7 +47,6 @@ export const useStore = create<StoreTypes>((set) => ({
       console.log(error);
     }
   },
-  setCurrentPage: (currentPage: number) => set({ currentPage }),
   updateRow: async (id: string, rows: DataTypes[]) => {
     try {
       // finding row to update
@@ -69,6 +71,16 @@ export const useStore = create<StoreTypes>((set) => ({
       console.log(error);
     }
   },
+  deleteEmployee: async (id, rows) => {
+    try {
+      await axios.delete(`http://localhost:3001/Employees/${id}`);
+      const filteredRows = rows.filter((employee) => employee.id !== id);
+      set({ rows: filteredRows });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  setCurrentPage: (currentPage: number) => set({ currentPage }),
   searchEmployee: "",
   setSearchEmployee: (searchEmployee) => set({ searchEmployee }),
 }));
