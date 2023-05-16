@@ -16,11 +16,11 @@ function App() {
 
         <div>
           {/* add employee button */}
-          <div className='flex justify-between my-10'>
-            <div className='ml-5'>
+          <div className='block justify-between my-10 md:flex'>
+            <div className='ml-5 mb-5 md:mb-0'>
               <AddEmployeeButton visible={visible} setVisible={setVisible} />
             </div>
-            <div className='mr-5'>
+            <div className='ml-5 mt-5 md:mt-0 md:mr-5'>
               <SearchEmployee />
             </div>
           </div>

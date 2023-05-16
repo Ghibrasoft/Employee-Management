@@ -80,101 +80,134 @@ export function Table() {
     }, [currentPage, fetchData]);
 
     return (
-        <div>
-            <table className='table-auto min-w-full'>
-                {/* table head */}
-                <thead>
-                    <TableHead />
-                </thead>
-
-                {/* table body */}
-                <tbody className='bg-slate-100 divide-y divide-slate-300'>
-                    {
-                        rows.filter(({ name, email, salary, birthday, status }) =>
-                            name.toLocaleLowerCase().includes(searchEmployee) ||
-                            email.toLocaleLowerCase().includes(searchEmployee) ||
-                            salary.toString().includes(searchEmployee) ||
-                            birthday.toString().toLocaleLowerCase().includes(searchEmployee) ||
-                            status.toLocaleLowerCase() === searchEmployee)
-                            .map(({ id, avatar, name, email, salary, birthday, status }) => (
-                                <tr key={id} className='text-center'>
-                                    <td className='px-16 py-2 flex flex-row items-center'>
-                                        <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
-                                        {editMode && selectedId === id ? <input type='text' className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all' defaultValue={name} onChange={(e) => setEditedRow({ ...editedRow, name: e.target.value })} /> : name}
-                                    </td>
-                                    <td className='px-16 py-2'>
-                                        {editMode && selectedId === id ? <input type='email' className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all' defaultValue={email} onChange={(e) => setEditedRow({ ...editedRow, email: e.target.value })} /> : email}
-                                    </td>
-                                    <td className='px-16 py-2'>
-                                        {editMode && selectedId === id ? <input type='date' className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all' defaultValue={birthday} onChange={(e) => setEditedRow({ ...editedRow, birthday: e.target.value })} /> : new Date(birthday).toLocaleDateString('en-US')}
-                                    </td>
-                                    <td className='px-16 py-2'>
-                                        {editMode && selectedId === id ? <input type='number' className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all' defaultValue={salary} onChange={(e) => setEditedRow({ ...editedRow, salary: Number(e.target.value) })} /> : salary}
-                                    </td>
-                                    <td className='px-16 py-2'>
-                                        <button
-                                            className={`${status === "Active" ? 'bg-green-500' : 'bg-red-500'} text-white rounded-full px-3`}
-                                            onClick={() => statusUpdateHandler(id)}
-                                        >
-                                            {status}
-                                        </button>
-                                    </td>
-                                    <td className='px-16 py-2 text-gray-500 flex'>
-                                        {/* edit & done btns */}
-                                        <div className='flex'>
-                                            {
-                                                editMode && selectedId === id ?
-                                                    <>
-                                                        {/* update done btn and close btn */}
-                                                        <button
-                                                            className='hover:text-green-500 transition-all'
-                                                            onClick={() => { setEditMode(false); updateRowField(id) }}>
-                                                            <BiCheck size={30} />
-                                                        </button>
-                                                        <button
-                                                            className='hover:text-red-500 transition-all'
-                                                            onClick={() => { setEditMode(false) }}>
-                                                            <BiX size={30} />
-                                                        </button>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        {/* edit btn & delete btn with confirmation modal */}
-                                                        <button
-                                                            className='hover:text-yellow-500 transition-all'
-                                                            onClick={() => { setEditMode(true); setSelectedId(id) }}>
-                                                            <BiEdit size={25} />
-                                                        </button>
-                                                        <button
-                                                            className='hover:text-red-500 transition-all'
-                                                            onClick={() => { setOpenModal(true); setEmployeeId(id) }}>
-                                                            <BiTrashAlt size={25} />
-                                                        </button>
-                                                    </>
-                                            }
-                                        </div>
-                                        {
-                                            openModal &&
-                                            <ConfirmModal
-                                                openModal={openModal}
-                                                setOpenModal={setOpenModal}
-                                                employeeId={employeeId}
-                                                rowDeleteHandler={rowDeleteHandler}
-                                            />
-                                        }
-                                    </td>
-                                </tr>
-                            ))
-                    }
-                </tbody>
-            </table>
-
+        <>
             <TablePagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 allEmployees={allEmployees}
                 changeHandler={changeHandler}
             />
-        </div>
+            <div className='overflow-auto rounded-md shadow mt-1'>
+                <table className='table-auto w-full'>
+                    {/* table head */}
+                    <thead>
+                        <TableHead />
+                    </thead>
+
+                    {/* table body */}
+                    <tbody className='bg-slate-100 divide-y divide-slate-300'>
+                        {
+                            rows.filter(({ name, email, salary, birthday, status }) =>
+                                name.toLocaleLowerCase().includes(searchEmployee) ||
+                                email.toLocaleLowerCase().includes(searchEmployee) ||
+                                salary.toString().includes(searchEmployee) ||
+                                birthday.toString().toLocaleLowerCase().includes(searchEmployee) ||
+                                status.toLocaleLowerCase() === searchEmployee)
+                                .map(({ id, avatar, name, email, salary, birthday, status }) => (
+                                    <tr key={id} className='text-center'>
+                                        <td className='flex items-center xl:ml-3 xl:gap-3 whitespace-wrap'>
+                                            <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
+                                            {editMode && selectedId === id ?
+                                                <input
+                                                    type='text'
+                                                    className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all'
+                                                    defaultValue={name}
+                                                    onChange={(e) => setEditedRow({ ...editedRow, name: e.target.value })} />
+                                                :
+                                                name}
+                                        </td>
+                                        <td className='whitespace-nowrap'>
+                                            {editMode && selectedId === id ?
+                                                <input
+                                                    type='email'
+                                                    className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all'
+                                                    defaultValue={email}
+                                                    onChange={(e) => setEditedRow({ ...editedRow, email: e.target.value })} />
+                                                :
+                                                email}
+                                        </td>
+                                        <td className='whitespace-nowrap'>
+                                            {editMode && selectedId === id ?
+                                                <input
+                                                    type='date'
+                                                    className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all'
+                                                    defaultValue={birthday}
+                                                    onChange={(e) => setEditedRow({ ...editedRow, birthday: e.target.value })} />
+                                                :
+                                                new Date(birthday).toLocaleDateString('en-US')}
+                                        </td>
+                                        <td className='whitespace-nowrap'>
+                                            {editMode && selectedId === id ?
+                                                <input
+                                                    type='number'
+                                                    className='border rounded-md shadow-sm py-1 px-3 outline-none focus:outline-none focus:shadow-lg transition-all'
+                                                    defaultValue={salary}
+                                                    onChange={(e) => setEditedRow({ ...editedRow, salary: Number(e.target.value) })} />
+                                                :
+                                                salary}
+                                        </td>
+                                        <td className='whitespace-nowrap'>
+                                            <button
+                                                className={`${status === "Active" ?
+                                                    'bg-green-500 ring-2 ring-green-500 hover:ring-offset-2 active:ring-offset-1 transition ease-in-out'
+                                                    :
+                                                    'bg-red-500 ring-2 ring-red-500 hover:ring-offset-2 active:ring-offset-1 transition ease-in-out'} 
+                                                text-white rounded-full px-3`}
+                                                onClick={() => statusUpdateHandler(id)}
+                                            >
+                                                {status}
+                                            </button>
+                                        </td>
+                                        <td className='text-gray-500 whitespace-nowrap'>
+                                            {/* edit & done btns */}
+                                            <div className='flex justify-center gap-3'>
+                                                {
+                                                    editMode && selectedId === id ?
+                                                        <>
+                                                            {/* update done btn and close btn */}
+                                                            <button
+                                                                className='hover:text-green-500 transition-all'
+                                                                onClick={() => { setEditMode(false); updateRowField(id) }}>
+                                                                <BiCheck size={30} />
+                                                            </button>
+                                                            <button
+                                                                className='hover:text-red-500 transition-all'
+                                                                onClick={() => { setEditMode(false) }}>
+                                                                <BiX size={30} />
+                                                            </button>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            {/* edit btn & delete btn with confirmation modal */}
+                                                            <button
+                                                                className='hover:text-yellow-500 transition-all'
+                                                                onClick={() => { setEditMode(true); setSelectedId(id) }}>
+                                                                <BiEdit size={27} />
+                                                            </button>
+                                                            <button
+                                                                className='hover:text-red-500 transition-all'
+                                                                onClick={() => { setOpenModal(true); setEmployeeId(id) }}>
+                                                                <BiTrashAlt size={27} />
+                                                            </button>
+                                                        </>
+                                                }
+                                            </div>
+                                            {
+                                                openModal &&
+                                                <ConfirmModal
+                                                    openModal={openModal}
+                                                    setOpenModal={setOpenModal}
+                                                    employeeId={employeeId}
+                                                    rowDeleteHandler={rowDeleteHandler}
+                                                />
+                                            }
+                                        </td>
+                                    </tr>
+                                ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 }
