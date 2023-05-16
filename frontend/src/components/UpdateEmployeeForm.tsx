@@ -1,6 +1,6 @@
 import { BiPlus } from 'react-icons/bi';
 
-export function AddUserForm() {
+export function UpdateEmployeeForm() {
     return (
         <form
             className='grid lg:grid-cols-2 w-4/6 gap-4 ml-5'

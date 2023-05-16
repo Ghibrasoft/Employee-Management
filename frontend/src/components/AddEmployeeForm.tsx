@@ -1,10 +1,28 @@
+import { useRef } from 'react';
 import { BiPlus } from 'react-icons/bi';
+import { useStore } from '../store/ZustandStore';
 
-export function UpdateUserForm() {
+export function AddEmployeeForm() {
+    const formRef = useRef<HTMLFormElement>(null);
+    const { addEmployee, fetchData, currentPage } = useStore();
+
+
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        const formData = new FormData(formRef.current!);
+        const data = Object.fromEntries(formData.entries());
+        addEmployee(data);
+        fetchData(currentPage, 20);
+
+        formRef.current?.reset();
+    }
+
     return (
         <form
             className='grid lg:grid-cols-2 w-4/6 gap-4 ml-5'
-        // onSubmit={handleSubmit}
+            ref={formRef}
+            onSubmit={handleSubmit}
         >
             <div className='input-type'>
                 <input
@@ -12,7 +30,7 @@ export function UpdateUserForm() {
                     name='firstname'
                     placeholder='Firstname...'
                     className='border w-full py-3 px-5 focus:outline-none rounded-md shadow-sm'
-                // onChange={setFormData}
+                    required
                 />
             </div>
             <div className='input-type'>
@@ -21,7 +39,7 @@ export function UpdateUserForm() {
                     name='lastname'
                     placeholder='Lastname...'
                     className='border w-full py-3 px-5 focus:outline-none rounded-md shadow-sm'
-                // onChange={setFormData}
+                    required
                 />
             </div>
             <div className='input-type'>
@@ -30,25 +48,26 @@ export function UpdateUserForm() {
                     name='email'
                     placeholder='Email...'
                     className='border w-full py-3 px-5 focus:outline-none rounded-md shadow-sm'
-                // onChange={setFormData}
+                    required
                 />
             </div>
             <div className='input-type'>
                 <input
-                    type='text'
+                    type='number'
+                    min={1000}
+                    max={3000}
                     name='salary'
-                    placeholder='Salary...'
+                    placeholder='Salary(minmax 1000-3000)...'
                     className='border w-full py-3 px-5 focus:outline-none rounded-md shadow-sm'
-                // onChange={setFormData}
+                    required
                 />
             </div>
             <div className='input-type'>
                 <input
                     type='date'
-                    name='date'
-                    placeholder='Salary...'
+                    name='birthday'
                     className='border py-3 px-5 focus:outline-none rounded-md shadow-sm'
-                // onChange={setFormData}
+                    required
                 />
             </div>
 
@@ -65,7 +84,7 @@ export function UpdateUserForm() {
             border border-slate-300 bg-white checked:bg-green-500
             checked:border-green-500 focus:outline-none transition duration-200
             mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
-                    // onChange={setFormData}
+                        required
                     />
                     <label
                         htmlFor='radioDefault1'
@@ -85,7 +104,7 @@ export function UpdateUserForm() {
             border border-slate-300 bg-white checked:bg-red-500
             checked:border-red-500 focus:outline-none transition duration-200
             mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
-                    // onChange={setFormData}
+                        required
                     />
                     <label
                         htmlFor='radioDefault2'

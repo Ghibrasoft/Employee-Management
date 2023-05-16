@@ -1,23 +1,23 @@
 import { BiTrashAlt } from 'react-icons/bi';
 
 type ModalPropTypes = {
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    openModal: boolean;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
     employeeId: string;
     rowDeleteHandler: (id: string) => void;
 }
 
-export function ConfirmModal({ isOpen, setIsOpen, employeeId, rowDeleteHandler }: ModalPropTypes) {
+export function ConfirmModal({ openModal, setOpenModal, employeeId, rowDeleteHandler }: ModalPropTypes) {
 
     return (
         // backdrop
         <div
-            className={`fixed inset-0 flex justify-center items-center transition-colors ${isOpen ? 'visible bg-black/5' : 'invisible'}`}
-            onClick={() => setIsOpen(false)}>
+            className={`fixed inset-0 flex justify-center items-center transition-colors ${openModal ? 'visible bg-black/5' : 'invisible'}`}
+            onClick={() => setOpenModal(false)}>
             {/* modal */}
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`bg-white rounded-xl shadow p-6 transition-all ${isOpen ? 'scale-100 opacity-100' : 'scale-125 opacity-0'}`}>
+                className={`bg-white rounded-xl shadow p-6 transition-all ${openModal ? 'scale-100 opacity-100' : 'scale-125 opacity-0'}`}>
                 {/* modal body */}
                 <div className='text-center w-56'>
                     <BiTrashAlt size={50} className='mx-auto text-red-500' />
@@ -29,12 +29,12 @@ export function ConfirmModal({ isOpen, setIsOpen, employeeId, rowDeleteHandler }
                     <div className='flex gap-4'>
                         <button
                             className='bg-red-500 rounded-lg px-4 py-2 text-white w-full hover:bg-red-700'
-                            onClick={() => { rowDeleteHandler(employeeId); setIsOpen(false) }}>
+                            onClick={() => { rowDeleteHandler(employeeId); setOpenModal(false) }}>
                             Delete
                         </button>
                         <button
                             className='bg-gray-500 rounded-lg px-4 py-2 text-white w-full hover:bg-gray-700'
-                            onClick={() => setIsOpen(false)}>
+                            onClick={() => setOpenModal(false)}>
                             Cancel
                         </button>
                     </div>

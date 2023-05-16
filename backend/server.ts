@@ -62,7 +62,7 @@ addModel();
 //       avatar: chance.avatar(),
 //       name: chance.name(),
 //       email: chance.email(),
-//       salary: chance.integer({min: 700, max: 3000}),
+//       salary: chance.integer({min: 1000, max: 3000}),
 //       birthday: chance.birthday(),
 //       status: chance.pickone(status)
 //     });
@@ -114,12 +114,20 @@ app.post("/Employees", async (req: Request, res: Response) => {
 // PUT
 app.put("/Employees/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { name, email, salary, birthday, status } = req.body;
+
   try {
-    const [numAffectedRows] = await Employees.update(
-      { status: status },
-      { where: { id } }
-    );
+    const updatedFields: any = {
+      ...(name && { name }),
+      ...(email && { email }),
+      ...(salary && { salary }),
+      ...(birthday && { birthday }),
+      ...(status && { status }),
+    };
+
+    const [numAffectedRows] = await Employees.update(updatedFields, {
+      where: { id },
+    });
 
     if (numAffectedRows === 0) {
       return res
