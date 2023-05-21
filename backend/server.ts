@@ -57,14 +57,14 @@ addModel();
 // generate random employees
 // const status = ["Active", "Inactive"];
 // function addEmployees() {
-//   for (let i = 1; i <= 15; i++) {
+//   for (let i = 1; i <= 50; i++) {
 //     const newEmployee = Employees.build({
 //       avatar: chance.avatar(),
 //       name: chance.name(),
 //       email: chance.email(),
-//       salary: chance.integer({min: 1000, max: 3000}),
+//       salary: chance.integer({ min: 1000, max: 3000 }),
 //       birthday: chance.birthday(),
-//       status: chance.pickone(status)
+//       status: chance.pickone(status),
 //     });
 //     newEmployee.save();
 //   }

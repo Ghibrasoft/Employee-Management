@@ -4,6 +4,8 @@ import { useStore } from '../store/ZustandStore';
 import { BiEdit, BiTrashAlt, BiCheck, BiX } from 'react-icons/bi';
 import { ConfirmModal } from './ConfirmModal';
 import { TableHead } from './TableHead';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type EditedRowTypes = {
     name: string;
@@ -41,7 +43,8 @@ export function Table() {
     function statusUpdateHandler(id: string) {
         updateRowStatus(id, rows)
             .then(() => {
-                fetchData(currentPage, 20)
+                fetchData(currentPage, 20);
+                toast.success("Employee status updated");
             })
             .catch((error) => {
                 console.log(error);
@@ -53,6 +56,7 @@ export function Table() {
         updateRow(id, rows, editedRow)
             .then(() => {
                 fetchData(currentPage, 20);
+                toast.success("Employee row updated");
             })
             .catch((error) => {
                 console.log(error);
@@ -63,7 +67,8 @@ export function Table() {
     function rowDeleteHandler(id: string) {
         deleteEmployee(id, rows)
             .then(() => {
-                fetchData(currentPage, 20)
+                fetchData(currentPage, 20);
+                toast.error("Employee deleted");
             })
             .catch((error) => {
                 console.log(error);
@@ -81,6 +86,7 @@ export function Table() {
 
     return (
         <>
+            <ToastContainer />
             <TablePagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -104,7 +110,7 @@ export function Table() {
                                 birthday.toString().toLocaleLowerCase().includes(searchEmployee) ||
                                 status.toLocaleLowerCase() === searchEmployee)
                                 .map(({ id, avatar, name, email, salary, birthday, status }) => (
-                                    <tr key={id} className='text-center'>
+                                    <tr key={id} className='text-center hover:bg-white hover:shadow'>
                                         <td className='flex items-center xl:ml-3 xl:gap-3 whitespace-wrap'>
                                             <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
                                             {editMode && selectedId === id ?

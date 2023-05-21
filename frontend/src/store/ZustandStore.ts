@@ -132,7 +132,7 @@ export const useStore = create<StoreTypes>((set) => ({
       const updatedStatus = await axios.put(
         `http://localhost:3001/Employees/${id}`,
         {
-          status: rowToUpdateStatus.status === "Active" ? "InActive" : "Active",
+          status: rowToUpdateStatus.status === "Active" ? "Inactive" : "Active",
         }
       );
       // check if employee ID matches, a new obj is created with updated 'status', otherwise, the existing employee object is used

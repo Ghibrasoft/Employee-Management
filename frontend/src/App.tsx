@@ -10,8 +10,8 @@ function App() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <section>
-      <main className="mb-5">
+    <section className='h-full'>
+      <main>
         <NavigationBar />
 
         <div>
