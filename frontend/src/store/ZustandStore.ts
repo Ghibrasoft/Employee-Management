@@ -1,6 +1,5 @@
 import axios from "axios";
 import { create } from "zustand";
-import gravatar from "gravatar";
 
 type DataTypes = {
   id: string;
@@ -69,14 +68,8 @@ export const useStore = create<StoreTypes>((set) => ({
     try {
       const { firstname, lastname, email, birthday, salary, status } = data;
       const fullName = `${firstname} ${lastname}`;
-      const avatarImg = gravatar.url(`${email}`, {
-        size: "200",
-        rating: "pg",
-        default: "mp" || "identicon",
-      });
 
       await axios.post("http://localhost:3001/Employees", {
-        avatar: avatarImg,
         name: fullName,
         email,
         salary,

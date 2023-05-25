@@ -13,17 +13,30 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors({ origin: LOCALHOST_VITE_URL }));
 
-// passing connection URL
-const sequelize = new Sequelize(process.env.CONN_POSTG_URL || "", {
+// passing connection URL, from railway.app
+// const sequelize = new Sequelize(process.env.CONN_POSTG_URL || "", {
+//   define: {
+//     freezeTableName: true, // don't pluralize names (globally)
+//   },
+// });
+
+// locally, pgAdmin
+const sequelize = new Sequelize({
+  dialect: "postgres",
+  host: process.env.host,
+  database: process.env.dbname,
+  port: Number(process.env.portPG),
+  username: process.env.user,
+  password: process.env.password,
   define: {
-    freezeTableName: true, // don't pluralize names (globally)
+    freezeTableName: true,
   },
 });
 
 // creating a model
 const Employees = sequelize.define("Employees", {
   id: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
@@ -47,7 +60,7 @@ const Employees = sequelize.define("Employees", {
   },
 });
 
-// Creates the table if it doesn't exist (and does nothing if it already exists)
+// creates the table if it doesn't exist (and does nothing if it already exists)
 async function addModel() {
   await Employees.sync();
   console.log("Database sync success!");
@@ -55,20 +68,20 @@ async function addModel() {
 addModel();
 
 // generate random employees
-// const status = ["Active", "Inactive"];
-// function addEmployees() {
-//   for (let i = 1; i <= 50; i++) {
-//     const newEmployee = Employees.build({
-//       avatar: chance.avatar(),
-//       name: chance.name(),
-//       email: chance.email(),
-//       salary: chance.integer({ min: 1000, max: 3000 }),
-//       birthday: chance.birthday(),
-//       status: chance.pickone(status),
-//     });
-//     newEmployee.save();
-//   }
-// }
+const status = ["Active", "Inactive"];
+function addEmployees() {
+  for (let i = 1; i <= 20; i++) {
+    const newEmployee = Employees.build({
+      avatar: chance.avatar(),
+      name: chance.name(),
+      email: chance.email(),
+      salary: chance.integer({ min: 1000, max: 3000 }),
+      birthday: chance.birthday(),
+      status: chance.pickone(status),
+    });
+    newEmployee.save();
+  }
+}
 // addEmployees();
 
 // GET all employees
