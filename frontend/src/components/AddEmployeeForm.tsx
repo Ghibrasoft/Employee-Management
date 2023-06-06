@@ -9,15 +9,14 @@ export function AddEmployeeForm() {
     const { addEmployee, fetchData, currentPage } = useStore();
 
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
         const formData = new FormData(formRef.current!);
         const data = Object.fromEntries(formData.entries());
-        addEmployee(data);
+        await addEmployee(data);
         fetchData(currentPage, 20);
         toast.success("Employee added successfully");
-
         formRef.current?.reset();
     }
 

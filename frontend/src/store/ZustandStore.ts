@@ -28,14 +28,22 @@ type StoreTypes = {
   totalPages: number;
   allEmployees: number;
 
-  fetchData: (page: number, limit: number) => Promise<void>;
+  getEmployee: (page: number, limit: number) => Promise<void>;
+  getCurrEmployee: (id: string | undefined) => Promise<void>;
+  currEmployee: {
+    avatar: string;
+    name: string;
+    email: string;
+    salary: number;
+    birthday: string;
+  };
   addEmployee: (data: FormDataType) => Promise<void>;
-  updateRow: (
+  updateEmployee: (
     id: string,
     rows: DataTypes[],
     editedRow: EditedRowTypes
   ) => Promise<void>;
-  updateRowStatus: (id: string, rows: DataTypes[]) => Promise<void>;
+  updateEmployeeStatus: (id: string, rows: DataTypes[]) => Promise<void>;
   deleteEmployee: (id: string, rows: DataTypes[]) => Promise<void>;
 
   setCurrentPage: (currentPage: number) => void;
@@ -48,7 +56,7 @@ export const useStore = create<StoreTypes>((set) => ({
   currentPage: 1,
   totalPages: 0,
   allEmployees: 0,
-  fetchData: async (page = 1, limit = 20) => {
+  getEmployee: async (page = 1, limit = 20) => {
     try {
       const res = await axios.get("http://localhost:3001/Employees", {
         params: { page, limit },
@@ -60,6 +68,21 @@ export const useStore = create<StoreTypes>((set) => ({
         totalPages,
         allEmployees,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  currEmployee: {
+    avatar: "",
+    name: "",
+    email: "",
+    salary: 0,
+    birthday: "",
+  },
+  getCurrEmployee: async (id: string | undefined) => {
+    try {
+      const res = await axios.get(`http://localhost:3001/Employees/${id}`);
+      set({ currEmployee: res.data });
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +103,7 @@ export const useStore = create<StoreTypes>((set) => ({
       console.log(error);
     }
   },
-  updateRow: async (
+  updateEmployee: async (
     id: string,
     rows: DataTypes[],
     editedRow: EditedRowTypes
@@ -114,7 +137,7 @@ export const useStore = create<StoreTypes>((set) => ({
       console.log(error);
     }
   },
-  updateRowStatus: async (id: string, rows: DataTypes[]) => {
+  updateEmployeeStatus: async (id: string, rows: DataTypes[]) => {
     try {
       // finding row to update
       const rowToUpdateStatus = rows.find((row) => row.id === id);

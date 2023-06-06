@@ -23,7 +23,7 @@ export function ConfirmModal({ openModal, setOpenModal, employeeId, rowDeleteHan
                     <BiTrashAlt size={50} className='mx-auto text-red-500' />
                     <div className='mx-auto m-4 w-48'>
                         <h3 className='text-lg font-extrabold text-gray-800'>Confirm delete</h3>
-                        <p className='text-sm text-gray-500'>Are you sure you want to delete this employee?</p>
+                        <p className='text-sm text-gray-500 whitespace-normal'>Are you sure you want to delete this employee?</p>
                     </div>
 
                     <div className='flex gap-4'>

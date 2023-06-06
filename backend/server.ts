@@ -20,7 +20,7 @@ app.use(cors({ origin: LOCALHOST_VITE_URL }));
 //   },
 // });
 
-// locally, pgAdmin
+// pgAdmin
 const sequelize = new Sequelize({
   dialect: "postgres",
   host: process.env.host,
@@ -109,6 +109,26 @@ app.get("/Employees", async (req: Request, res: Response) => {
   res.json(data);
 });
 
+// GET concret employee
+app.get("/Employees/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  // const currEmployee = await Employees.findOne({ where: { id } });
+  // res.json(currEmployee);
+  try {
+    const currEmployee = await Employees.findOne({
+      where: { id },
+    });
+
+    if (currEmployee) {
+      res.json(currEmployee);
+    } else {
+      res.status(404).json({ message: "Employee not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // POST
 app.post("/Employees", async (req: Request, res: Response) => {
   const { avatar, name, email, birthday, salary, status } = req.body;
@@ -172,4 +192,5 @@ const port = process.env.PORT || 4321;
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
-// module.exports = Employees;   // it can be imported and used by other modules in your application
+
+module.exports = Employees; // it can be imported and used by other modules in your application

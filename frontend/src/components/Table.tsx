@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { TablePagination } from './TablePagination';
 import { useStore } from '../store/ZustandStore';
 import { BiEdit, BiTrashAlt, BiCheck, BiX } from 'react-icons/bi';
+import { ImProfile } from 'react-icons/im';
 import { ConfirmModal } from './ConfirmModal';
 import { TableHead } from './TableHead';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 type EditedRowTypes = {
     name: string;
@@ -15,6 +17,7 @@ type EditedRowTypes = {
 };
 
 export function Table() {
+    const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editedRow, setEditedRow] = useState<EditedRowTypes>({
@@ -32,18 +35,18 @@ export function Table() {
         totalPages,
         allEmployees,
         searchEmployee,
-        fetchData,
+        getEmployee,
         setCurrentPage,
-        updateRow,
-        updateRowStatus,
+        updateEmployee,
+        updateEmployeeStatus,
         deleteEmployee
     } = useStore();
 
     // updating status onclick
     function statusUpdateHandler(id: string) {
-        updateRowStatus(id, rows)
+        updateEmployeeStatus(id, rows)
             .then(() => {
-                fetchData(currentPage, 20);
+                getEmployee(currentPage, 20);
                 toast.success("Employee status updated");
             })
             .catch((error) => {
@@ -53,9 +56,9 @@ export function Table() {
 
     // update employee row
     function updateRowField(id: string) {
-        updateRow(id, rows, editedRow)
+        updateEmployee(id, rows, editedRow)
             .then(() => {
-                fetchData(currentPage, 20);
+                getEmployee(currentPage, 20);
                 toast.success("Employee row updated");
             })
             .catch((error) => {
@@ -67,7 +70,7 @@ export function Table() {
     function rowDeleteHandler(id: string) {
         deleteEmployee(id, rows)
             .then(() => {
-                fetchData(currentPage, 20);
+                getEmployee(currentPage, 20);
                 toast.error("Employee deleted");
             })
             .catch((error) => {
@@ -81,8 +84,8 @@ export function Table() {
     }
 
     useEffect(() => {
-        fetchData(currentPage, 20)
-    }, [currentPage, fetchData]);
+        getEmployee(currentPage, 20)
+    }, [currentPage, getEmployee]);
 
     return (
         <>
@@ -110,7 +113,7 @@ export function Table() {
                                 birthday.toString().toLocaleLowerCase().includes(searchEmployee) ||
                                 status.toLocaleLowerCase() === searchEmployee)
                                 .map(({ id, avatar, name, email, salary, birthday, status }) => (
-                                    <tr key={id} className='text-center hover:bg-white hover:shadow'>
+                                    <tr key={id} className='text-center hover:bg-white hover:shadow' onDoubleClick={() => navigate(`/employee/${id}`)}>
                                         <td className='flex items-center xl:ml-3 xl:gap-3 whitespace-wrap'>
                                             <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
                                             {editMode && selectedId === id ?
@@ -185,6 +188,12 @@ export function Table() {
                                                         :
                                                         <>
                                                             {/* edit btn & delete btn with confirmation modal */}
+                                                            <button
+                                                                className='hover:text-indigo-500 transition-all'
+                                                                onClick={() => navigate(`/employee/${id}`)}
+                                                            >
+                                                                <ImProfile size={27} />
+                                                            </button>
                                                             <button
                                                                 className='hover:text-yellow-500 transition-all'
                                                                 onClick={() => { setEditMode(true); setSelectedId(id) }}>

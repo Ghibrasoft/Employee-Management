@@ -3,7 +3,6 @@ import { Table } from './components/Table';
 import { useState } from 'react';
 import { EmployeeForm } from './components/EmployeeForm';
 import { SearchEmployee } from './components/SearchEmployee';
-import { NavigationBar } from './components/NavigationBar';
 import { AddEmployeeButton } from './components/AddEmployeeButton';
 
 function App() {
@@ -12,8 +11,6 @@ function App() {
   return (
     <section className='h-full'>
       <main>
-        <NavigationBar />
-
         <div>
           {/* add employee button */}
           <div className='block justify-between my-10 md:flex'>
