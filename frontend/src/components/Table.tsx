@@ -153,7 +153,7 @@ export function Table() {
                                                     defaultValue={salary}
                                                     onChange={(e) => setEditedRow({ ...editedRow, salary: Number(e.target.value) })} />
                                                 :
-                                                salary}
+                                                salary.toLocaleString()}
                                         </td>
                                         <td className='whitespace-nowrap'>
                                             <button

@@ -13,16 +13,19 @@ export function EmployeeProfile() {
     }, []);
 
     return (
-        <div className="flex justify-center items-center mt-10">
-            <div className="bg-blue-100 w-1/3 rounded-lg p-10">
-                <img src={avatar} alt="avatar" className="rounded-full" />
-                <div>
-                    <h1 className="text-2xl font-bold">{name}</h1>
-                    <p>{email}</p>
-                    <p>{salary}</p>
-                    <p>{new Date(birthday).toLocaleDateString('en-US')}</p>
+        <>
+            <h1 className="text-center text-3xl font-bold mt-10">Employee profile</h1>
+            <div className="flex flex-grow justify-center items-center">
+                <div className="bg-gray-50 w-1/3 rounded-lg p-10 border shadow-md hover:shadow-lg transition-shadow">
+                    <img src={avatar} alt="avatar" className="rounded-full" />
+                    <div className="mt-3">
+                        <h1 className="text-2xl font-bold border-indigo-400 border-b-4">{name}</h1>
+                        <p className="font-bold mt-3">Email:<span className="ml-3 font-normal text-indigo-500 hover:cursor-pointer hover:underline">{email}</span></p>
+                        <p className="font-bold">Salary:<span className="ml-3 font-normal text-indigo-500">{salary.toLocaleString()} ₾</span></p>
+                        <p className="font-bold">Birthday:<span className="ml-3 font-normal text-indigo-500">{new Date(birthday).toLocaleDateString('en-US')}</span></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
