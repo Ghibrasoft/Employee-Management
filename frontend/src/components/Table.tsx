@@ -113,7 +113,7 @@ export function Table() {
                                 birthday.toString().toLocaleLowerCase().includes(searchEmployee) ||
                                 status.toLocaleLowerCase() === searchEmployee)
                                 .map(({ id, avatar, name, email, salary, birthday, status }) => (
-                                    <tr key={id} className='text-center hover:bg-white hover:shadow' onDoubleClick={() => navigate(`/employee/${id}`)}>
+                                    <tr key={id} className='text-center hover:bg-white hover:shadow' onDoubleClick={() => navigate(`/employees/${id}`)}>
                                         <td className='flex items-center xl:ml-3 xl:gap-3 whitespace-wrap'>
                                             <img src={avatar} alt='avatar' className='w-10 h-10 rounded-full' />
                                             {editMode && selectedId === id ?
@@ -190,7 +190,7 @@ export function Table() {
                                                             {/* edit btn & delete btn with confirmation modal */}
                                                             <button
                                                                 className='hover:text-indigo-500 transition-all'
-                                                                onClick={() => navigate(`/employee/${id}`)}
+                                                                onClick={() => navigate(`/employees/${id}`)}
                                                             >
                                                                 <ImProfile size={27} />
                                                             </button>

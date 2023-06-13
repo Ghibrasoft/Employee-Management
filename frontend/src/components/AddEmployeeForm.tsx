@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export function AddEmployeeForm() {
     const formRef = useRef<HTMLFormElement>(null);
-    const { addEmployee, fetchData, currentPage } = useStore();
+    const { addEmployee, getEmployee, currentPage } = useStore();
 
 
     async function handleSubmit(e: React.FormEvent) {
@@ -14,8 +14,8 @@ export function AddEmployeeForm() {
 
         const formData = new FormData(formRef.current!);
         const data = Object.fromEntries(formData.entries());
-        await addEmployee(data);
-        fetchData(currentPage, 20);
+        await addEmployee(data)
+        getEmployee(currentPage, 20);
         toast.success("Employee added successfully");
         formRef.current?.reset();
     }
@@ -73,6 +73,20 @@ export function AddEmployeeForm() {
                         className='border py-3 px-5 focus:outline-none rounded-md shadow-sm'
                         required
                     />
+                </div>
+                <div className='input-type'>
+                    <input
+                        type='file'
+                        name='avatar'
+                        className='absolute inset-0 opacity-0 z-[-1]'
+                    // className='border py-3 px-5 focus:outline-none rounded-md shadow-sm'
+                    // required
+                    />
+                    <label
+                        htmlFor='avatar'
+                        className='py-2 px-4 bg-blue-500 text-white rounded cursor-pointer'>
+                        Choose file
+                    </label>
                 </div>
 
                 {/* radio buttons div */}

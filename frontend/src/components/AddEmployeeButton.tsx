@@ -1,12 +1,16 @@
 import { FiUserPlus } from 'react-icons/fi';
+import { useStore } from '../store/ZustandStore';
 
 type HandlerPropsType = {
     visible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export function AddEmployeeButton({ visible, setVisible }: HandlerPropsType) {
+    const { authenticated } = useStore();
+
     return (
         <button
+            disabled={!authenticated}
             className="flex items-center px-4 py-2 rounded-full text-white bg-indigo-500 ring-2 ring-indigo-500 
   active:ring-offset-2 shadow-slate-900 shadow-md
   hover:ring-offset-4 hover:bg-indigo-700 hover:ring-indigo-700 transition ease-in-out"

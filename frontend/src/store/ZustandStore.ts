@@ -18,16 +18,29 @@ type EditedRowTypes = {
   birthday: string;
 };
 
-type FormDataType = {
+type FormDataTypes = {
   [k: string]: FormDataEntryValue;
 };
 
 type StoreTypes = {
+  // auth
+  authenticated: boolean;
+  setAuthenticated: (value: boolean) => void;
+  loggedInUser: {
+    username: string;
+    email: string;
+  };
+  getLoggedInUSer: (id: string) => Promise<void>;
+  registerUSer: (userData: FormDataTypes) => Promise<void>;
+  loginUSer: (userData: FormDataTypes) => Promise<void>;
+  logOutUSer: () => void;
+
   rows: DataTypes[];
   currentPage: number;
   totalPages: number;
   allEmployees: number;
 
+  // employees
   getEmployee: (page: number, limit: number) => Promise<void>;
   getCurrEmployee: (id: string | undefined) => Promise<void>;
   currEmployee: {
@@ -37,7 +50,7 @@ type StoreTypes = {
     salary: number;
     birthday: string;
   };
-  addEmployee: (data: FormDataType) => Promise<void>;
+  addEmployee: (data: FormDataTypes) => Promise<void>;
   updateEmployee: (
     id: string,
     rows: DataTypes[],
@@ -52,13 +65,75 @@ type StoreTypes = {
 };
 
 export const useStore = create<StoreTypes>((set) => ({
+  // auth
+  authenticated: false,
+  setAuthenticated: (value: boolean) => set({ authenticated: value }),
+  loggedInUser: {
+    username: "",
+    email: "",
+  },
+  getLoggedInUSer: async (id: string) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      if (!token) throw new Error("Zustand: User isn't authenticated");
+
+      const res = await axios.get(`http://localhost:3001/profile/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      set({ loggedInUser: res.data });
+    } catch (error) {
+      console.log("loggedInUser", error);
+    }
+  },
+  registerUSer: async (userData) => {
+    const { username, email, password } = userData;
+    try {
+      await axios.post("http://localhost:3001/signup", {
+        username,
+        email,
+        password,
+      });
+    } catch (error) {
+      console.log("Sign up zustand", error);
+    }
+  },
+  loginUSer: async (userData) => {
+    const { email, password } = userData;
+    try {
+      const res = await axios.post("http://localhost:3001/signin", {
+        email,
+        password,
+      });
+
+      if (res.status === 200) {
+        const { id, token } = res.data;
+        localStorage.setItem("userId", id);
+        localStorage.setItem("jwt", token);
+        set({ authenticated: true });
+      } else {
+        throw new Error("Invalid email or password");
+      }
+    } catch (error) {
+      console.log("Sign in zustand", error);
+      set({ authenticated: false });
+    }
+  },
+  logOutUSer: () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("jwt");
+    set({ authenticated: false });
+  },
+
+  // employees
   rows: [],
   currentPage: 1,
   totalPages: 0,
   allEmployees: 0,
   getEmployee: async (page = 1, limit = 20) => {
     try {
-      const res = await axios.get("http://localhost:3001/Employees", {
+      const res = await axios.get("http://localhost:3001/employees", {
         params: { page, limit },
       });
       const { rows, currentPage, totalPages, allEmployees } = res.data;
@@ -81,18 +156,18 @@ export const useStore = create<StoreTypes>((set) => ({
   },
   getCurrEmployee: async (id: string | undefined) => {
     try {
-      const res = await axios.get(`http://localhost:3001/Employees/${id}`);
+      const res = await axios.get(`http://localhost:3001/employees/${id}`);
       set({ currEmployee: res.data });
     } catch (error) {
       console.log(error);
     }
   },
-  addEmployee: async (data: FormDataType) => {
+  addEmployee: async (data: FormDataTypes) => {
     try {
       const { firstname, lastname, email, birthday, salary, status } = data;
       const fullName = `${firstname} ${lastname}`;
 
-      await axios.post("http://localhost:3001/Employees", {
+      await axios.post("http://localhost:3001/employees", {
         name: fullName,
         email,
         salary,
@@ -117,7 +192,7 @@ export const useStore = create<StoreTypes>((set) => ({
 
       // making request to the server
       const updatedData = await axios.put(
-        `http://localhost:3001/Employees/${id}`,
+        `http://localhost:3001/employees/${id}`,
         {
           name: editedRow.name,
           email: editedRow.email,
@@ -146,7 +221,7 @@ export const useStore = create<StoreTypes>((set) => ({
       }
       // making request to the server
       const updatedStatus = await axios.put(
-        `http://localhost:3001/Employees/${id}`,
+        `http://localhost:3001/employees/${id}`,
         {
           status: rowToUpdateStatus.status === "Active" ? "Inactive" : "Active",
         }
@@ -163,7 +238,7 @@ export const useStore = create<StoreTypes>((set) => ({
   },
   deleteEmployee: async (id, rows) => {
     try {
-      await axios.delete(`http://localhost:3001/Employees/${id}`);
+      await axios.delete(`http://localhost:3001/employees/${id}`);
       const filteredRows = rows.filter((employee) => employee.id !== id);
       set({ rows: filteredRows });
     } catch (error) {
