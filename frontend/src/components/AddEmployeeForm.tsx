@@ -7,12 +7,19 @@ import 'react-toastify/dist/ReactToastify.css';
 export function AddEmployeeForm() {
     const formRef = useRef<HTMLFormElement>(null);
     const { addEmployee, getEmployee, currentPage } = useStore();
-
+    // need correction
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    function handleFileInput() {
+        const target = fileInputRef.current;
+        if (target) target.click();
+    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
         const formData = new FormData(formRef.current!);
+        const file = fileInputRef.current!.files![0]; // need correction
+        formData.append("avatar", file, file.name); // need correction
         const data = Object.fromEntries(formData.entries());
         await addEmployee(data)
         getEmployee(currentPage, 20);
@@ -78,13 +85,14 @@ export function AddEmployeeForm() {
                     <input
                         type='file'
                         name='avatar'
+                        ref={fileInputRef}
                         className='absolute inset-0 opacity-0 z-[-1]'
-                    // className='border py-3 px-5 focus:outline-none rounded-md shadow-sm'
                     // required
                     />
                     <label
                         htmlFor='avatar'
-                        className='py-2 px-4 bg-blue-500 text-white rounded cursor-pointer'>
+                        onClick={handleFileInput}
+                        className='py-2 px-4 rounded-md cursor-pointer text-white ring-2 ring-indigo-500 hover:ring-indigo-700 hover:ring-offset-2 active:ring-offset-1 bg-indigo-500 hover:bg-indigo-700 transition-all'>
                         Choose file
                     </label>
                 </div>

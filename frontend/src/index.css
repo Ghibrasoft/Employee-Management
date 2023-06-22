@@ -7,3 +7,10 @@
 body {
   font-family: "Ubuntu", sans-serif;
 }
+
+.home-page {
+  background-image: url("./assets/towers.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

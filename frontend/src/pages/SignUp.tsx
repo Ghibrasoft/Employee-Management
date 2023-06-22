@@ -24,7 +24,7 @@ export default function SignUp() {
     return (
         <div className="flex flex-1 justify-center items-center">
             <div className="flex flex-col justify-center items-center border rounded-md px-16 py-24 gap-3 bg-gray-50 w-1/3" >
-                <h1>
+                <h1 className="text-3xl">
                     Sign up
                 </h1>
                 <form

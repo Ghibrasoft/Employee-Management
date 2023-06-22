@@ -1,28 +1,21 @@
-import { Link } from "react-router-dom";
-import { useStore } from "../store/ZustandStore";
+import { useNavigate } from "react-router-dom";
+import { RiArrowRightLine } from "react-icons/ri";
 
 export default function Home() {
-    const { logOutUSer } = useStore();
+    const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col flex-1 items-center justify-center gap-5">
-            <h1 className="text-5xl">Welcome</h1>
+        <main className="home-page flex flex-col flex-1 items-center justify-center gap-5">
+            <h1 className="text-7xl">Welcome</h1>
 
-            <div className="flex gap-5">
-                <Link to={"/signup"}>
-                    <button
-                        className="px-3 py-1 rounded-md ring-2 ring-indigo-500 hover:bg-indigo-500 hover:ring-offset-2 hover:text-white active:ring-offset-4 transition ease-in-out">
-                        Sign up
-                    </button>
-                </Link>
-                <Link to={"/employees"}>
-                    <button
-                        onClick={logOutUSer}
-                        className="px-3 py-1 rounded-md ring-2 ring-indigo-500 hover:bg-indigo-500 hover:ring-offset-2 hover:text-white active:ring-offset-4 transition ease-in-out">
-                        As guest
-                    </button>
-                </Link>
-            </div>
-        </div>
+            <button
+                onClick={() => navigate("/signin")}
+                className="group flex items-center text-2xl rounded-full px-4 py-2 hover:ring-2 hover:ring-indigo-500 hover:text-indigo-500 active:bg-indigo-100 active:ring-offset-2 transition-all duration-300">
+                Get started
+                <span className="text-indigo-500 opacity-0 -translate-x-5 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">
+                    <RiArrowRightLine size={25} />
+                </span>
+            </button>
+        </main>
     )
 }
